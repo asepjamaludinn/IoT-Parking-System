@@ -4,23 +4,34 @@ import { useState, useEffect } from "react";
 import { FaMoon, FaSun, FaParking } from "react-icons/fa";
 
 export default function Navbar() {
-  const [darkMode, setDarkMode] = useState(
-    () => localStorage.getItem("theme") === "dark"
-  );
+  const [darkMode, setDarkMode] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (darkMode) {
+    const savedTheme = localStorage.getItem("theme") === "dark";
+    setDarkMode(savedTheme);
+
+    if (savedTheme) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, [darkMode]);
+  }, []);
 
   const toggleDarkMode = () => {
+    if (darkMode === null) return; // Hindari error saat state belum disetel
+
     const newMode = !darkMode;
     setDarkMode(newMode);
     localStorage.setItem("theme", newMode ? "dark" : "light");
+
+    if (newMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   };
+
+  if (darkMode === null) return null; // Mencegah flash UI sebelum state siap
 
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md fixed top-0 left-0 w-full z-50 transition-colors duration-300">
