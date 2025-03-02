@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import ParkingCard from "./components/ParkingCard";
 import Navbar from "./components/Navbar";
+import { getParkingStatus, getParkingHistory } from "../lib/api";
 import {
   FaCar,
   FaParking,
@@ -12,9 +13,6 @@ import {
   FaClock,
   FaClipboardList,
 } from "react-icons/fa";
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 
 export default function Home() {
   const totalParking = 1;
@@ -38,22 +36,11 @@ export default function Home() {
   }, []);
 
   const fetchParkingData = async () => {
-    try {
-      const [statusRes, historyRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/status`),
-        fetch(`${API_BASE_URL}/history`),
-      ]);
-      const statusData = await statusRes.json();
-      const historyData = await historyRes.json();
+    const statusData = await getParkingStatus();
+    const historyData = await getParkingHistory();
 
-      setParkingStatus(statusData.status);
-      setParkingHistory(
-        Array.isArray(historyData.history) ? historyData.history : []
-      );
-    } catch (error) {
-      console.error("Gagal mengambil data parkir:", error);
-      setParkingHistory([]);
-    }
+    setParkingStatus(statusData.status);
+    setParkingHistory(historyData);
   };
 
   useEffect(() => {

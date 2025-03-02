@@ -12,10 +12,9 @@ import (
 )
 
 func main() {
-	// Inisialisasi Redis
+	
 	database.InitRedis()
 
-	// Router menggunakan Gin
 	router := gin.Default()
 
 	// Middleware CORS

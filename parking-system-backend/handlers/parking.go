@@ -54,7 +54,7 @@ func GetParkingStatus(c *gin.Context) {
 	})
 }
 
-// ✅ GET /history → Ambil seluruh riwayat parkir
+
 func GetParkingHistory(c *gin.Context) {
 	history, err := database.RedisClient.LRange(database.Ctx, "parking_history", 0, -1).Result()
 	if err != nil {
@@ -77,7 +77,6 @@ func GetParkingHistory(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"history": formattedHistory})
 }
 
-// ✅ POST /update → Update status parkir & simpan ke history
 func UpdateParkingStatus(c *gin.Context) {
 	var requestData ParkingRequest
 
@@ -114,7 +113,7 @@ func UpdateParkingStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Status parkir diperbarui!"})
 }
 
-// ✅ Fungsi bantu untuk parsing history dari Redis
+
 func parseHistoryEntry(entry string) ParkingHistory {
 	var data ParkingHistory
 	err := json.Unmarshal([]byte(entry), &data)
